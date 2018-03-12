@@ -43,8 +43,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Card.cs" />
+    <Compile Include="CardSelection.cs" />
+    <Compile Include="City.cs" />
+    <Compile Include="Connection.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Enums\ActionType.cs" />
+    <Compile Include="Enums\CardColor.cs" />
+    <Compile Include="Enums\PlayerColor.cs" />
+    <Compile Include="GameManager.cs" />
+    <Compile Include="Player.cs" />
+    <Compile Include="PlayerAction.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Route.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
