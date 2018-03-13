@@ -23,7 +23,7 @@ namespace Ticket2Ride
         public PlayerAction Action()
         {
             var playerAction = new PlayerAction();
-            playerAction.ActionType = ActionType.BuildCcnnection;
+            playerAction.ActionType = ActionType.GetCards;
 
             return playerAction;
         }

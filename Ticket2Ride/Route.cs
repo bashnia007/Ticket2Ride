@@ -8,5 +8,10 @@ namespace Ticket2Ride
 {
     public class Route
     {
+        public int Id { get; set; }
+        public City City1 { get; set; }
+        public City City2 { get; set; }
+        public int Price { get; set; }
+        public bool IsMain { get; set; }
     }
 }

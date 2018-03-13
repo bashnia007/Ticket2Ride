@@ -15,5 +15,6 @@ namespace Ticket2Ride
         public const int CardsByColor = 12;
         public const int CardColorsCount = 8;
         public const int OpenedCards = 5;
+        public const int InitialCardsOnHand = 4;
     }
 }

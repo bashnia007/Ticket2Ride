@@ -12,17 +12,30 @@ namespace Ticket2Ride
         public List<Player> Players { get; set; }
         public List<Card> Cards { get; set; }
         public Queue<Card> Deck { get; set; }
-
         public Card[] OpenedCards { get; set; }
+
+        public List<Connection> Connections { get; set; }
+
+        public List<Route> Routes { get; set; }
+        public Queue<Route> MainRoutes { get; set; }
+        public Queue<Route> AuxillaryRoutes { get; set; }
+
+        public List<City> Cities { get; set; }
+
         public void Init()
         {
             Cards = new List<Card>();
-            Players = new List<Player>();
             Deck = new Queue<Card>();
             OpenedCards = new Card[5];
 
+            AuxillaryRoutes = new Queue<Route>();
+
             InitCards();
             MixCards();
+            GetInitialOpenCards();
+            ProvideInitialCards();
+
+            MixRoutes();
         }
 
         public void GameProcess()
@@ -124,12 +137,63 @@ namespace Ticket2Ride
             {
                 notMixed.Add(card);
             }
-            foreach (Card t in Cards)
+            foreach (var t in Cards)
             {
                 var number = rnd.Next(notMixed.Count);
                 var card = notMixed[number];
                 Deck.Enqueue(Cards.Single(c => c == card));
+                notMixed.Remove(card);
             }
+        }
+
+        private void MixRoutes()
+        {
+            MainRoutes = new Queue<Route>();
+            AuxillaryRoutes = new Queue<Route>();
+            MixRoutes(Routes.Where(r => r.IsMain).ToList(), MainRoutes);
+            MixRoutes(Routes.Where(r => !r.IsMain).ToList(), AuxillaryRoutes);
+        }
+
+        private void MixRoutes(List<Route> routes, Queue<Route> result)
+        {
+            var rnd = new Random();
+            var notMixed = new List<Route>();
+            foreach (var route in routes)
+            {
+                notMixed.Add(route);
+            }
+            foreach (var route in routes)
+            {
+                var number = rnd.Next(notMixed.Count);
+                var selectedRoute = notMixed[number];
+                result.Enqueue(Routes.Single(r => r == selectedRoute));
+                notMixed.Remove(selectedRoute);
+            }
+        }
+
+        private void GetInitialOpenCards()
+        {
+            for (int i = 0; i < Constants.OpenedCards; i++)
+            {
+                OpenedCards[i] = Deck.Dequeue();
+            }
+        }
+
+        private void ProvideInitialCards()
+        {
+            foreach (var player in Players)
+            {
+                player.Cards = new List<Card>();
+                for (int i = 0; i < Constants.InitialCardsOnHand; i++)
+                {
+                    player.Cards.Add(Deck.Dequeue());
+                }
+            }
+        }
+
+        private void ProvideInitialRoutes()
+        {
+            
         }
     }
 }

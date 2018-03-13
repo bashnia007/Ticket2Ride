@@ -22,6 +22,8 @@ namespace Ticket2Ride
             gameManager.Players = players;
 
             gameManager.Init();
+
+            gameManager.GameProcess();
         }
 
         static List<Player> CreateTestUsers()
