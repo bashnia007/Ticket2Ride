@@ -12,7 +12,8 @@ namespace Ticket2Ride
     {
         static void Main(string[] args)
         {
-            TestGame();
+            // TestGame();
+            // CreateTestDb();
         }
 
         static void TestGame()
@@ -36,6 +37,12 @@ namespace Ticket2Ride
                 players.Add(player);
             }
             return players;
+        }
+
+        static void CreateTestDb()
+        {
+            DbManager.AddFakeConnection();
+            var data = DbManager.GetConnections();
         }
     }
 }

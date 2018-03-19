@@ -10,5 +10,11 @@ namespace Ticket2Ride
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public ICollection<Connection> Connections { get; set; }
+
+        public City()
+        {
+            Connections = new List<Connection>();
+        }
     }
 }

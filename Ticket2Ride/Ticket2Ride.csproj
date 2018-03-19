@@ -58,6 +58,7 @@
     <Compile Include="Connection.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Database\T2RContext.cs" />
+    <Compile Include="DbManager.cs" />
     <Compile Include="Enums\ActionType.cs" />
     <Compile Include="Enums\CardColor.cs" />
     <Compile Include="Enums\PlayerColor.cs" />
