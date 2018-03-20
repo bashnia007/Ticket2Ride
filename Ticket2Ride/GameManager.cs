@@ -31,11 +31,21 @@ namespace Ticket2Ride
             AuxillaryRoutes = new Queue<Route>();
 
             InitCards();
-            MixCards();
-            GetInitialOpenCards();
-            ProvideInitialCards();
 
+            MixCards();
             MixRoutes();
+
+            GetInitialOpenCards();
+
+            ProvideInitialSet();
+        }
+        
+        private void ProvideInitialSet()
+        {
+            ProvideInitialCards();
+            ProvideInitialRoutes();
+
+            SetPlayersSettings();
         }
 
         public void GameProcess()
@@ -128,6 +138,11 @@ namespace Ticket2Ride
             }
         }
 
+        private void InitRoutes()
+        {
+            
+        }
+
         private void MixCards()
         {
             Deck = new Queue<Card>();
@@ -193,7 +208,23 @@ namespace Ticket2Ride
 
         private void ProvideInitialRoutes()
         {
-            
+            foreach (var player in Players)
+            {
+                player.Routes.Add(MainRoutes.Dequeue());
+                for (int i = 0; i < Constants.InitialAuxillaryRoutesOnHand; i++)
+                {
+                    player.Routes.Add(AuxillaryRoutes.Dequeue());
+                }
+            }
+        }
+
+        private void SetPlayersSettings()
+        {
+            foreach (var player in Players)
+            {
+                player.Stations = Constants.Stations;
+                player.Wagons = Constants.WagonsCount;
+            }
         }
     }
 }

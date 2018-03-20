@@ -16,5 +16,6 @@ namespace Ticket2Ride.Database
 
         public DbSet<Connection> Connections { get; set; }
         public DbSet<City> Cities { get; set; }
+        public DbSet<Route> Routes { get; set; }
     }
 }

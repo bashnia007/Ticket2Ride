@@ -14,12 +14,12 @@ namespace Ticket2Ride
         {
             using (var db = new Database.T2RContext())
             {
-                return db.Connections.Include(c => c.Cities).ToList();
+                return db.Connections.ToList();// null; // db.Connections.Include(c => c.Cities).ToList();
             }
         }
 
         public static void AddFakeConnection()
-        {
+        {/*
             using (var db = new Database.T2RContext())
             {
                 var edinburgh = new City
@@ -58,7 +58,8 @@ namespace Ticket2Ride
                 connection2.Cities.Add(london);
                 db.Connections.Add(connection2);
                 db.SaveChanges();
-            }
+            }*/
         }
+        
     }
 }

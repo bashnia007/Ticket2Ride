@@ -14,11 +14,9 @@ namespace Ticket2Ride
         public int? JokersRequired { get; set; }
         public int Length { get; set; }
 
-        public ICollection<City> Cities { get; set; }
+        public bool IsTunnel { get; set; }
 
-        public Connection()
-        {
-            Cities = new List<City>();
-        }
+        public City City1 { get; set; }
+        public City City2 { get; set; }
     }
 }

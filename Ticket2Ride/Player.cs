@@ -12,13 +12,16 @@ namespace Ticket2Ride
         public Player()
         {
             _rnd = new Random();
+            Cards = new List<Card>();
+            Routes = new List<Route>();
         }
         public PlayerColor Color { get; set; }
         public int Stations { get; set; }
         public int Wagons { get; set; }
         public List<Card> Cards { get; set; }
+        public List<Route> Routes { get; set; }
 
-        private Random _rnd;
+        private readonly Random _rnd;
 
         public PlayerAction Action()
         {
