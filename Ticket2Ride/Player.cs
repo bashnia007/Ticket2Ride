@@ -39,5 +39,10 @@ namespace Ticket2Ride
             if (!cardSelection.FromDeck) cardSelection.OpenedCard = _rnd.Next(Constants.OpenedCards);
             return cardSelection;
         }
+
+        public List<Route> SelectRoutes(List<Route> source)
+        {
+            return source;
+        }
     }
 }

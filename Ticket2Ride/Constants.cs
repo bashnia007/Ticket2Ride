@@ -17,5 +17,6 @@ namespace Ticket2Ride
         public const int OpenedCards = 5;
         public const int InitialCardsOnHand = 4;
         public const int InitialAuxillaryRoutesOnHand = 3;
+        public const int ProvidedRoutes = 3;
     }
 }

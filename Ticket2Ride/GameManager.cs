@@ -28,6 +28,8 @@ namespace Ticket2Ride
             Deck = new Queue<Card>();
             OpenedCards = new Card[5];
 
+            GetDataFromDb();
+
             AuxillaryRoutes = new Queue<Route>();
 
             InitCards();
@@ -64,7 +66,7 @@ namespace Ticket2Ride
                             ProvideCards(player);
                             break;
                         case ActionType.GetRoutes:
-                            ProvideRoutes();
+                            ProvideRoutes(player);
                             break;
                         case ActionType.BuildCcnnection:
                             BuildConnection();
@@ -94,9 +96,14 @@ namespace Ticket2Ride
             throw new NotImplementedException();
         }
 
-        private void ProvideRoutes()
+        private void ProvideRoutes(Player player)
         {
-            throw new NotImplementedException();
+            var routes = new List<Route>();
+            for (int i = 0; i < Constants.ProvidedRoutes; i++)
+            {
+                routes.Add(AuxillaryRoutes.Dequeue());
+            }
+            player.SelectRoutes(routes);
         }
 
         private void ProvideCards(Player player)
@@ -137,12 +144,7 @@ namespace Ticket2Ride
                 });
             }
         }
-
-        private void InitRoutes()
-        {
-            
-        }
-
+        
         private void MixCards()
         {
             Deck = new Queue<Card>();
@@ -225,6 +227,13 @@ namespace Ticket2Ride
                 player.Stations = Constants.Stations;
                 player.Wagons = Constants.WagonsCount;
             }
+        }
+
+        private void GetDataFromDb()
+        {
+            Connections = DbManager.GetConnections();
+            var cities = DbManager.GetCities();
+            Routes = DbManager.GetRoutes();
         }
     }
 }
