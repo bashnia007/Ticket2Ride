@@ -15,6 +15,9 @@ namespace Ticket2Ride
         public Card[] OpenedCards { get; set; }
 
         public List<Connection> Connections { get; set; }
+        public List<MapConnection> MapConnections { get; set; }
+
+        public List<MapCity> MapCities { get; set; }
 
         public List<Route> Routes { get; set; }
         public Queue<Route> MainRoutes { get; set; }
@@ -69,10 +72,10 @@ namespace Ticket2Ride
                             ProvideRoutes(player);
                             break;
                         case ActionType.BuildCcnnection:
-                            BuildConnection();
+                            BuildConnection(action.ObjectId, action.CardsForPayment, player);
                             break;
                         case ActionType.BuildStation:
-                            BuildStation();
+                            BuildStation(action.ObjectId, action.CardsForPayment, player);
                             break;
                         default:
                             break;
@@ -86,14 +89,53 @@ namespace Ticket2Ride
             }
         }
 
-        private void BuildStation()
+        private void BuildStation(int objectId, List<Card> cardsForPayment, Player player)
         {
-            throw new NotImplementedException();
+            var city = MapCities.Single(c => c.City.Id == objectId);
+            if (city.Owner == null)
+            {
+                city.Owner = player;
+                foreach (var card in cardsForPayment)
+                {
+                    player.Cards.Remove(card);
+                }
+            }
+            else
+            {
+                throw new ArgumentException("This city is already occupated");
+            }
         }
 
-        private void BuildConnection()
+        private void BuildConnection(int objectId, List<Card> cardsForPayment, CardColor color, Player player)
         {
-            throw new NotImplementedException();
+            var connection = MapConnections.Single(c => c.Connection.Id == objectId);
+            if (connection.Owner == null)
+            {
+                if (connection.Connection.IsTunnel)
+                {
+                    var cardsToAdd = BuildTunnel(color);
+
+                }
+                connection.Owner = player;
+                foreach (var card in cardsForPayment)
+                {
+                    player.Cards.Remove(card);
+                }
+            }
+            else
+            {
+                throw new ArgumentException("This connection is already occupated");
+            }
+        }
+
+        private int BuildTunnel(CardColor color)
+        {
+            int additionalCards = 0;
+            for (int i = 0; i < Constants.CardsForTunnel; i++)
+            {
+                if (Deck.Dequeue().Color == color) additionalCards++;
+            }
+            return additionalCards;
         }
 
         private void ProvideRoutes(Player player)
@@ -232,7 +274,17 @@ namespace Ticket2Ride
         private void GetDataFromDb()
         {
             Connections = DbManager.GetConnections();
+
+            Connections.ForEach(connection =>
+            {
+                MapConnections.Add(new MapConnection(connection));
+            });
             var cities = DbManager.GetCities();
+
+            cities.ForEach(city =>
+            {
+                MapCities.Add(new MapCity(city));
+            });
             Routes = DbManager.GetRoutes();
         }
     }

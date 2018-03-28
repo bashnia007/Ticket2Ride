@@ -20,7 +20,7 @@ namespace Ticket2Ride
         public int Wagons { get; set; }
         public List<Card> Cards { get; set; }
         public List<Route> Routes { get; set; }
-
+        
         private readonly Random _rnd;
 
         public PlayerAction Action()

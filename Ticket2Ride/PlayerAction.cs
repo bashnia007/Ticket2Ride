@@ -11,5 +11,8 @@ namespace Ticket2Ride
     {
         public ActionType ActionType { get; set; }
         
+        public int ObjectId { get; set; }
+
+        public List<Card> CardsForPayment { get; set; }
     }
 }

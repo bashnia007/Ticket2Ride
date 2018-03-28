@@ -63,6 +63,8 @@
     <Compile Include="Enums\CardColor.cs" />
     <Compile Include="Enums\PlayerColor.cs" />
     <Compile Include="GameManager.cs" />
+    <Compile Include="MapCity.cs" />
+    <Compile Include="MapConnection.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="PlayerAction.cs" />
     <Compile Include="Program.cs" />
