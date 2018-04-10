@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ticket2Ride", "Ticket2Ride\
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "T2R_Database", "T2R_Database\T2R_Database.sqlproj", "{37946AF2-C252-479B-8634-A7EA43ACFA6B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI", "UI\UI.csproj", "{6F3737C5-2D0D-4900-84C3-A46EC336CA7D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,10 @@ Global
 		{37946AF2-C252-479B-8634-A7EA43ACFA6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37946AF2-C252-479B-8634-A7EA43ACFA6B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{37946AF2-C252-479B-8634-A7EA43ACFA6B}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{6F3737C5-2D0D-4900-84C3-A46EC336CA7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F3737C5-2D0D-4900-84C3-A46EC336CA7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F3737C5-2D0D-4900-84C3-A46EC336CA7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F3737C5-2D0D-4900-84C3-A46EC336CA7D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
