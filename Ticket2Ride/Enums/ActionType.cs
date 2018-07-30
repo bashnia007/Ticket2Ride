@@ -1,16 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Ticket2Ride.Enums
+﻿namespace Ticket2Ride.Enums
 {
     public enum ActionType
     {
-        BuildCcnnection,
+        /// <summary>
+        /// Построить перегон
+        /// </summary>
+        BuildConnection,
+        /// <summary>
+        /// Построить станцию
+        /// </summary>
         BuildStation,
+        /// <summary>
+        /// Взять карты
+        /// </summary>
         GetCards,
+        /// <summary>
+        /// Взять маршруты
+        /// </summary>
         GetRoutes
     }
 }

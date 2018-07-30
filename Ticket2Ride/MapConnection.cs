@@ -12,6 +12,8 @@ namespace Ticket2Ride
         {
             Connection = connection;
         }
+
+        public bool IsFree => Owner == null;
         public Connection Connection { get; private set; }
         public Player Owner { get; set; }
     }

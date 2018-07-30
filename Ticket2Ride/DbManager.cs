@@ -14,7 +14,8 @@ namespace Ticket2Ride
         {
             using (var db = new Database.T2RContext())
             {
-                return db.Connections.ToList();// null; // db.Connections.Include(c => c.Cities).ToList();
+                //return db.Connections.ToList();// null; 
+                return db.Connections.Include(c => c.City1).Include(c => c.City1).ToList();
             }
         }
 

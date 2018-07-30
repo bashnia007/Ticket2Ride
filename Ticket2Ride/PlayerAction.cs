@@ -11,5 +11,7 @@ namespace Ticket2Ride
         public int ObjectId { get; set; }
 
         public List<Card> CardsForPayment { get; set; }
+
+        public CardColor CardColor { get; set; }
     }
 }

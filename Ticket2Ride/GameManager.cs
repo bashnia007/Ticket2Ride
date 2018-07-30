@@ -23,12 +23,16 @@ namespace Ticket2Ride
         public Queue<Route> MainRoutes { get; set; }
         public Queue<Route> AuxillaryRoutes { get; set; }
 
+        public List<Card> UsedCards { get; set; }
+
         public List<City> Cities { get; set; }
 
         public void Init()
         {
             Cards = new List<Card>();
             Deck = new Queue<Card>();
+            MapConnections = new List<MapConnection>();
+            MapCities = new List<MapCity>();
             OpenedCards = new Card[5];
 
             GetDataFromDb();
@@ -43,6 +47,8 @@ namespace Ticket2Ride
             GetInitialOpenCards();
 
             ProvideInitialSet();
+
+            FillTable();
         }
         
         private void ProvideInitialSet()
@@ -51,6 +57,12 @@ namespace Ticket2Ride
             ProvideInitialRoutes();
 
             SetPlayersSettings();
+        }
+
+        private void FillTable()
+        {
+            Table.OpenedCards = OpenedCards;
+            Table.MapCities = MapCities;
         }
 
         public void GameProcess()
@@ -71,11 +83,11 @@ namespace Ticket2Ride
                         case ActionType.GetRoutes:
                             ProvideRoutes(player);
                             break;
-                        case ActionType.BuildCcnnection:
-                            BuildConnection(action.ObjectId, action.CardsForPayment, player);
+                        case ActionType.BuildConnection:
+                            BuildConnection(action.ObjectId, action.CardColor, player);
                             break;
                         case ActionType.BuildStation:
-                            BuildStation(action.ObjectId, action.CardsForPayment, player);
+                            BuildStation(player);
                             break;
                         default:
                             break;
@@ -87,6 +99,16 @@ namespace Ticket2Ride
                     }
                 }
             }
+        }
+
+        private void BuildStation(Player player)
+        {
+            var stationSelection = player.SelectStation();
+
+            UsedCards.AddRange(stationSelection.Cards);
+            player.Cards.RemoveAll(c => stationSelection.Cards.Contains(c));
+
+            MapCities.Single(c => c.City.Id == stationSelection.StationId).Owner = player;
         }
 
         private void BuildStation(int objectId, List<Card> cardsForPayment, Player player)
@@ -106,28 +128,29 @@ namespace Ticket2Ride
             }
         }
 
-        private void BuildConnection(int objectId, List<Card> cardsForPayment, CardColor color, Player player)
+        private void BuildConnection(int objectId, CardColor color, Player player)
         {
             var connection = MapConnections.Single(c => c.Connection.Id == objectId);
-            if (connection.Owner == null)
+            List<Card> cards;
+            if (connection.Connection.IsTunnel)
             {
-                if (connection.Connection.IsTunnel)
+                int nesessaryAdditionalCards = 0;
+                for(int i = 0; i < 3; i++)
                 {
-                    var cardsToAdd = BuildTunnel(color);
-
+                    var card = Deck.Dequeue();
+                    if (card.Color == color) nesessaryAdditionalCards++;
                 }
-                connection.Owner = player;
-                foreach (var card in cardsForPayment)
+                cards = player.BuildTunnel(color, connection.Connection.Length + nesessaryAdditionalCards);
+                if (cards != null)
                 {
-                    player.Cards.Remove(card);
+                    Players.Single(p => p.Color == player.Color).Cards.RemoveAll(pc => cards.Select(c => c.Id).ToList().Contains(pc.Id));
                 }
+                return;
             }
-            else
-            {
-                throw new ArgumentException("This connection is already occupated");
-            }
+            cards = player.BuildTunnel(color, connection.Connection.Length);
+            Players.Single(p => p.Color == player.Color).Cards.RemoveAll(pc => cards.Select(c => c.Id).ToList().Contains(pc.Id));
         }
-
+        
         private int BuildTunnel(CardColor color)
         {
             int additionalCards = 0;
@@ -145,23 +168,30 @@ namespace Ticket2Ride
             {
                 routes.Add(AuxillaryRoutes.Dequeue());
             }
-            player.SelectRoutes(routes);
+            var selectedRoutes = player.SelectRoutes(1, routes);
+            player.Routes.AddRange(selectedRoutes);
         }
 
         private void ProvideCards(Player player)
         {
             for (int i = 0; i < 2; i++)
             {
-                var cardSelection = player.SelectCard(OpenedCards);
+                var cardSelection = player.SelectCard();
                 var newCard = Deck.Dequeue();
                 if (cardSelection.FromDeck) player.Cards.Add(newCard);
                 else
                 {
+                    var selectedCard = OpenedCards[cardSelection.OpenedCard];
                     player.Cards.Add(new Card
                     {
-                        Color = OpenedCards[cardSelection.OpenedCard].Color
+                        Color = selectedCard.Color,
+                        Id = selectedCard.Id
                     });
                     OpenedCards[cardSelection.OpenedCard] = newCard;
+                    if (selectedCard.Color == CardColor.Joker)
+                    {
+                        return;
+                    }
                 }
             }
         }
@@ -259,6 +289,8 @@ namespace Ticket2Ride
                 {
                     player.Routes.Add(AuxillaryRoutes.Dequeue());
                 }
+                //todo раскоментировать
+                //player.Routes = player.SelectRoutes(1, player.Routes);
             }
         }
 

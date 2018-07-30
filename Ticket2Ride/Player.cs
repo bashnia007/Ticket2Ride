@@ -20,7 +20,7 @@ namespace Ticket2Ride
         
         private readonly Random _rnd;
 
-        public PlayerAction Action()
+        public virtual PlayerAction Action()
         {
             var playerAction = new PlayerAction();
             playerAction.ActionType = ActionType.GetCards;
@@ -28,7 +28,7 @@ namespace Ticket2Ride
             return playerAction;
         }
 
-        public CardSelection SelectCard(Card[] openedCards)
+        public virtual CardSelection SelectCard()
         {
             var cardSelection = new CardSelection();
             cardSelection.FromDeck = _rnd.Next(2) == 0;
@@ -37,9 +37,19 @@ namespace Ticket2Ride
             return cardSelection;
         }
 
-        public List<Route> SelectRoutes(List<Route> source)
+        public virtual List<Card> BuildTunnel(CardColor cardColor, int cardsCount)
         {
-            return source;
+            return new List<Card>();
+        }
+
+        public virtual List<Route> SelectRoutes(int min, List<Route> routes)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual StationSelection SelectStation()
+        {
+            throw new NotImplementedException();
         }
     }
 }

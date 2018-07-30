@@ -30,9 +30,9 @@ namespace Ticket2Ride
         static List<Player> CreateTestUsers()
         {
             var players = new List<Player>();
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 2; i++)
             {
-                var player = new Player();
+                var player = new ConsolePlayer();
                 player.Color = (PlayerColor) i;
                 players.Add(player);
             }

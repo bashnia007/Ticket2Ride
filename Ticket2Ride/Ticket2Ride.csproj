@@ -52,17 +52,29 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actions\BuildConnectionAction.cs" />
+    <Compile Include="Actions\BuildStationAction.cs" />
+    <Compile Include="Actions\GetCardsAction.cs" />
+    <Compile Include="Actions\IAction.cs" />
+    <Compile Include="Actions\IBuildTunnelAction.cs" />
     <Compile Include="Card.cs" />
     <Compile Include="CardSelection.cs" />
     <Compile Include="City.cs" />
     <Compile Include="Connection.cs" />
+    <Compile Include="ConnectionBuilder.cs" />
+    <Compile Include="ConsolePlayer.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Database\T2RContext.cs" />
     <Compile Include="DbManager.cs" />
     <Compile Include="Enums\ActionType.cs" />
+    <Compile Include="Enums\BuildTunnelActionType.cs" />
     <Compile Include="Enums\CardColor.cs" />
     <Compile Include="Enums\PlayerColor.cs" />
+    <Compile Include="FakePlayer.cs" />
     <Compile Include="GameManager.cs" />
+    <Compile Include="GameProcess.cs" />
+    <Compile Include="InitialManager.cs" />
+    <Compile Include="IPlayer.cs" />
     <Compile Include="MapCity.cs" />
     <Compile Include="MapConnection.cs" />
     <Compile Include="Player.cs" />
@@ -70,6 +82,11 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Route.cs" />
+    <Compile Include="Self.cs" />
+    <Compile Include="StationSelection.cs" />
+    <Compile Include="Table.cs" />
+    <Compile Include="TableManager.cs" />
+    <Compile Include="VisiblePlayer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
