@@ -51,5 +51,15 @@ namespace Ticket2Ride
         {
             throw new NotImplementedException();
         }
+
+        public virtual int SelectConnection(bool isRepeat = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual CardColor SelectColor()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

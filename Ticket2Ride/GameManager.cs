@@ -34,6 +34,7 @@ namespace Ticket2Ride
             MapConnections = new List<MapConnection>();
             MapCities = new List<MapCity>();
             OpenedCards = new Card[5];
+            UsedCards = new List<Card>();
 
             GetDataFromDb();
 
@@ -63,6 +64,7 @@ namespace Ticket2Ride
         {
             Table.OpenedCards = OpenedCards;
             Table.MapCities = MapCities;
+            Table.MapConnections = MapConnections;
         }
 
         public void GameProcess()
@@ -84,7 +86,7 @@ namespace Ticket2Ride
                             ProvideRoutes(player);
                             break;
                         case ActionType.BuildConnection:
-                            BuildConnection(action.ObjectId, action.CardColor, player);
+                            BuildConnection(player);
                             break;
                         case ActionType.BuildStation:
                             BuildStation(player);
@@ -97,6 +99,34 @@ namespace Ticket2Ride
                         continueGame = false;
                         break;
                     }
+                }
+            }
+        }
+
+        private void BuildConnection(Player player)
+        {
+            MapConnection selectedConnection;
+            while (true)
+            {
+                var selectedConnectionId = player.SelectConnection();
+
+                selectedConnection = MapConnections.Single(c => c.Connection.Id == selectedConnectionId);
+
+                if (selectedConnection.IsFree) break;
+            }
+
+            if (selectedConnection.Connection.Color == (int) CardColor.Common)
+            {
+                var selectedColor = player.SelectColor();
+            }
+
+            if (selectedConnection.Connection.IsTunnel)
+            {
+                var tunnelCards = new List<Card>();
+                for (int i = 0; i < 3; i++)
+                {
+                    var card = Deck.Dequeue();
+                    tunnelCards.Add(card);
                 }
             }
         }

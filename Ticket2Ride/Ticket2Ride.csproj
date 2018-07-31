@@ -73,6 +73,7 @@
     <Compile Include="FakePlayer.cs" />
     <Compile Include="GameManager.cs" />
     <Compile Include="GameProcess.cs" />
+    <Compile Include="Helpers\DescriptionHelper.cs" />
     <Compile Include="InitialManager.cs" />
     <Compile Include="IPlayer.cs" />
     <Compile Include="MapCity.cs" />

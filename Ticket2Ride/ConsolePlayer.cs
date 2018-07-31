@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Ticket2Ride.Enums;
+using Ticket2Ride.Helpers;
 
 namespace Ticket2Ride
 {
@@ -104,8 +106,39 @@ namespace Ticket2Ride
 
             result.StationId = cityId;
 
+            var cardsForPayment = SelectCardsForPayment(stationNumber);
+            result.Cards = cardsForPayment;
+            return result;
+        }
+
+        public override int SelectConnection(bool isRepeat = false)
+        {
+            if (isRepeat)
+            {
+                Console.WriteLine("Вы не можете выбрать это соединение!");
+            }
+            var result = 0;
+            Console.WriteLine("Выберите соединение");
+            PrintConnections();
+
+            if (!int.TryParse(Console.ReadLine(), out result))
+            {
+                Console.WriteLine("Некорректный ввод!");
+                return SelectConnection();
+            }
 
             return result;
+        }
+
+        public override CardColor SelectColor()
+        {
+            Console.WriteLine("Выберите цвет");
+            foreach (var value in Enum.GetNames(typeof(CardColor)))
+            {
+                Console.WriteLine(value);
+            }
+            var result = Console.ReadLine();
+            return CardColor.Black;
         }
 
         private void PrintTable()
@@ -151,6 +184,55 @@ namespace Ticket2Ride
                 var state = mapCity.Owner?.Color.ToString() ?? "Свободен";
                 Console.WriteLine($"{mapCity.City.Id} {mapCity.City.Name} {state}");
             }
+        }
+
+        private void PrintConnections()
+        {
+            foreach (var connection in Table.MapConnections)
+            {
+                var isTunnel = connection.Connection.IsTunnel ? "Тунель," : "";
+                var isFree = connection.IsFree ? "Свободен" : $"владелец: {connection.Owner.Color}, ";
+                var jokers = (connection.Connection.JokersRequired != null && connection.Connection.JokersRequired > 0) ? $"требуется {connection.Connection.JokersRequired} паровозов" : "";
+                Console.WriteLine($"{connection.Connection.Id}: " +
+                                  $"{connection.Connection.City1.Name} - " +
+                                  $"{connection.Connection.City2.Name}, " +
+                                  $"цвет={DescriptionHelper.GetEnumDescription((CardColor)connection.Connection.Color)}, " +
+                                  $"длина={connection.Connection.Length}, " +
+                                  $"{isTunnel} " +
+                                  $"{isFree} " +
+                                  $"{jokers}");
+            }
+        }
+
+        private List<Card> SelectCardsForPayment(int count)
+        {
+            var result = new List<Card>();
+            Console.WriteLine("Выберите карты строительства:");
+            foreach (var card in Cards)
+            {
+                Console.WriteLine($"{Cards.IndexOf(card) + 1} {card.Color}");
+            }
+
+            for (int i = 0; i < count; i++)
+            {
+                int selected = 0;
+                if (!int.TryParse(Console.ReadLine(), out selected))
+                {
+                    Console.WriteLine("Некорректный ввод!");
+                    i--;
+                    continue;
+                }
+                var card = Cards[selected - 1];
+                if (result.Count > 0 && card.Color != result[0].Color)
+                {
+                    Console.WriteLine("Нельзя взять эту карту!");
+                    i--;
+                    continue;
+                }
+                result.Add(card);
+            }
+
+            return result;
         }
     }
 }
