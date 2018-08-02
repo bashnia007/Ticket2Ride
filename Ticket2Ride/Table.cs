@@ -22,5 +22,7 @@ namespace Ticket2Ride
         public static List<MapCity> MapCities { get; set; }
 
         public static Card[] OpenedCards { get; set; }
+
+        //public static List<Route> Routes { get; set; }
     }
 }

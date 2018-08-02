@@ -65,6 +65,7 @@ namespace Ticket2Ride
             Table.OpenedCards = OpenedCards;
             Table.MapCities = MapCities;
             Table.MapConnections = MapConnections;
+            //Table.Routes = Routes;
         }
 
         public void GameProcess()
@@ -114,11 +115,15 @@ namespace Ticket2Ride
 
                 if (selectedConnection.IsFree) break;
             }
+            BuildSet buildSet = new BuildSet();
 
-            if (selectedConnection.Connection.Color == (int) CardColor.Common)
-            {
-                var selectedColor = player.SelectColor();
-            }
+            buildSet.Color = 
+                selectedConnection.Connection.Color == (int) CardColor.Common
+                ? player.SelectColor()
+                : (CardColor) selectedConnection.Connection.Color;
+
+            buildSet.JokersToBuild = selectedConnection.Connection.JokersRequired.GetValueOrDefault(0);
+            buildSet.WagonsCost = selectedConnection.Connection.Length;
 
             if (selectedConnection.Connection.IsTunnel)
             {
@@ -127,8 +132,22 @@ namespace Ticket2Ride
                 {
                     var card = Deck.Dequeue();
                     tunnelCards.Add(card);
+                    UsedCards.Add(card);
                 }
+
+                var toAddCards = tunnelCards.Count(c => c.Color == buildSet.Color || c.Color == CardColor.Joker);
+                buildSet.TunnelCost = toAddCards;
             }
+
+            var cardsToBuild = player.GetCardsToBuild(buildSet);
+            if (cardsToBuild == null)
+            {
+                ProvideCards(player);
+                return;
+            }
+            UsedCards.AddRange(cardsToBuild);
+            player.Cards.RemoveAll(c => cardsToBuild.Contains(c));
+            MapConnections.Single(c => c.Connection.Id == selectedConnection.Connection.Id).Owner = player;
         }
 
         private void BuildStation(Player player)

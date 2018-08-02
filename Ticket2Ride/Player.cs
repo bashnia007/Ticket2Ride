@@ -61,5 +61,10 @@ namespace Ticket2Ride
         {
             throw new NotImplementedException();
         }
+
+        public virtual List<Card> GetCardsToBuild(BuildSet buildSet)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

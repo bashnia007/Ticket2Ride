@@ -36,6 +36,7 @@ namespace Ticket2Ride
             }
             return result;
         }
+
         public override PlayerAction Action()
         {
             PrintMyself();
@@ -66,6 +67,7 @@ namespace Ticket2Ride
                     playerAction.ActionType = Enums.ActionType.BuildStation;
                     break;
                 default:
+                    //TestCalculation();
                     break;
             }
             return playerAction;
@@ -107,6 +109,10 @@ namespace Ticket2Ride
             result.StationId = cityId;
 
             var cardsForPayment = SelectCardsForPayment(stationNumber);
+            if (cardsForPayment == null)
+            {
+                return null;
+            }
             result.Cards = cardsForPayment;
             return result;
         }
@@ -133,12 +139,41 @@ namespace Ticket2Ride
         public override CardColor SelectColor()
         {
             Console.WriteLine("Выберите цвет");
-            foreach (var value in Enum.GetNames(typeof(CardColor)))
+            foreach (var value in Enum.GetValues(typeof(CardColor)))
             {
-                Console.WriteLine(value);
+                if((int)value >= 0) Console.WriteLine($"{(int)value} {value}");
             }
-            var result = Console.ReadLine();
-            return CardColor.Black;
+            int input = 0;
+            if (!int.TryParse(Console.ReadLine(), out input))
+            {
+                Console.WriteLine("Некорректный ввод!");
+                return SelectColor();
+            }
+
+            var result = Enum.GetValues(typeof(CardColor)).GetValue(input);
+            return (CardColor) result;
+        }
+
+        public override List<Card> GetCardsToBuild(BuildSet buildSet)
+        {
+            var cards = new List<Card>();
+            var tunnelCards = buildSet.TunnelCost > 0 ? $" и {buildSet.TunnelCost} карт за туннель" : string.Empty;
+            var jokersCards = buildSet.JokersToBuild > 0 ? $"И {buildSet.JokersToBuild} паровозов" : string.Empty;
+            Console.WriteLine($"Вы должны заплатить {buildSet.WagonsCost}{tunnelCards} {buildSet.Color} цвета. {jokersCards}");
+            var wagons = SelectCardsForPayment(buildSet.WagonsToBuild, buildSet.Color);
+            if (wagons == null)
+            {
+                return null;
+            }
+            cards.AddRange(wagons);
+
+            var jokers = SelectCardsForPayment(buildSet.JokersToBuild, CardColor.Joker);
+            if (jokers == null)
+            {
+                return null;
+            }
+            cards.AddRange(jokers);
+            return cards;
         }
 
         private void PrintTable()
@@ -204,10 +239,12 @@ namespace Ticket2Ride
             }
         }
 
-        private List<Card> SelectCardsForPayment(int count)
+        private List<Card> SelectCardsForPayment(int count, CardColor color = CardColor.Common)
         {
             var result = new List<Card>();
-            Console.WriteLine("Выберите карты строительства:");
+            Console.WriteLine($"Выберите карты строительства. Требуется {count} карт. " +
+                              $"Для отмены введите -1, вам будет предложено взять карты строительства");
+            if(color != CardColor.Common) Console.WriteLine("Цвет = " + color);
             foreach (var card in Cards)
             {
                 Console.WriteLine($"{Cards.IndexOf(card) + 1} {card.Color}");
@@ -222,17 +259,33 @@ namespace Ticket2Ride
                     i--;
                     continue;
                 }
+                if (selected == -1)
+                {
+                    return null;
+                }
                 var card = Cards[selected - 1];
-                if (result.Count > 0 && card.Color != result[0].Color)
+                if (card.Color != CardColor.Joker && 
+                    ((result.Count > 0 && card.Color != result[0].Color && color == CardColor.Common) ||
+                    (color != CardColor.Common && card.Color != color)))
                 {
                     Console.WriteLine("Нельзя взять эту карту!");
                     i--;
                     continue;
                 }
+                
                 result.Add(card);
             }
 
             return result;
         }
+
+        /*
+        private void TestCalculation()
+        {
+            Table.MapConnections.Where(c => c.Connection.Id == 36 || c.Connection.Id == 38 || c.Connection.Id == 46 ||
+            c.Connection.Id == 74 || c.Connection.Id == 75 || c.Connection.Id == 76 || c.Connection.Id == 72).ToList().ForEach(c => c.Owner = this);
+            //var route = Table.Routes.FirstOrDefault(r => r.Id == 23);
+            var result = PointsCalculator.IsRouteCompleted(route, this);
+        }*/
     }
 }

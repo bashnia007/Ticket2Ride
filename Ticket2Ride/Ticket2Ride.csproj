@@ -57,6 +57,7 @@
     <Compile Include="Actions\GetCardsAction.cs" />
     <Compile Include="Actions\IAction.cs" />
     <Compile Include="Actions\IBuildTunnelAction.cs" />
+    <Compile Include="BuildSet.cs" />
     <Compile Include="Card.cs" />
     <Compile Include="CardSelection.cs" />
     <Compile Include="City.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="MapConnection.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="PlayerAction.cs" />
+    <Compile Include="PointsCalculator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Route.cs" />
